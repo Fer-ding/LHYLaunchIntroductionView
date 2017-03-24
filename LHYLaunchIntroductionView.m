@@ -28,6 +28,7 @@ static NSString *const kAppVersion = @"appVersion";
 @property (nonatomic, strong) UIButton *enterButton;
 
 @property (nonatomic, assign) LHYLaunchIntroductionType launchIntroductionType;
+@property (nonatomic, assign) CGFloat bottomSapcing;
 
 @end
 
@@ -37,7 +38,11 @@ static NSString *const kAppVersion = @"appVersion";
 
 #pragma mark - life cycle
 
-- (instancetype)initWithFrame:(CGRect)frame images:(NSArray *)images launchIntroductionType:(LHYLaunchIntroductionType)launchIntroductionType {
+- (instancetype)initWithFrame:(CGRect)frame
+                       images:(NSArray *)images
+       launchIntroductionType:(LHYLaunchIntroductionType)launchIntroductionType
+            pageBottomSapcing:(CGFloat)bottomSapcing {
+    
     self = [super initWithFrame:frame];
     if (!self) {
         return nil;
@@ -46,6 +51,7 @@ static NSString *const kAppVersion = @"appVersion";
     self.images = images;
     self.enterButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.launchIntroductionType = launchIntroductionType;
+    self.bottomSapcing = bottomSapcing;
     
     [self createScrollView];
     
@@ -55,20 +61,14 @@ static NSString *const kAppVersion = @"appVersion";
 
 #pragma mark - public method
 
-+ (void)launchIntroductionViewWithImageNames:(NSArray *)imageNames {
-    LHYLaunchIntroductionView *launch = [[LHYLaunchIntroductionView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight) images:imageNames launchIntroductionType:LHYLaunchIntroductionTypeNone];
-    launch.backgroundColor = [UIColor whiteColor];
++ (void)launchIntroductionViewWithImageNames:(NSArray *)imageNames pageBottomSapcing:(CGFloat)bottomSapcing {
     
-    [LHYLaunchIntroductionView addToWindowWithLaunch:launch];
+    [LHYLaunchIntroductionView launchIntroductionViewWithImageNames:imageNames pageBottomSapcing:bottomSapcing launchIntroductionType:LHYLaunchIntroductionTypeNone buttonConfiguration:nil];
 }
 
-+ (void)launchIntroductionViewWithImageNames:(NSArray *)imageNames buttonConfiguration:(LHYLaunchIntroductionConfigurationBlock)configuration {
++ (void)launchIntroductionViewWithImageNames:(NSArray *)imageNames pageBottomSapcing:(CGFloat)bottomSapcing buttonConfiguration:(LHYLaunchIntroductionConfigurationBlock)configuration {
     
-    LHYLaunchIntroductionView *launch = [[LHYLaunchIntroductionView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight) images:imageNames launchIntroductionType:LHYLaunchIntroductionTypeButton];
-    launch.backgroundColor = [UIColor whiteColor];
-    configuration(launch.enterButton);
-    
-    [LHYLaunchIntroductionView addToWindowWithLaunch:launch];
+    [LHYLaunchIntroductionView launchIntroductionViewWithImageNames:imageNames pageBottomSapcing:bottomSapcing launchIntroductionType:LHYLaunchIntroductionTypeButton buttonConfiguration:configuration];
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -93,6 +93,21 @@ static NSString *const kAppVersion = @"appVersion";
 }
 
 #pragma mark - private Method
+
+#pragma mark - 初始化界面
++ (void)launchIntroductionViewWithImageNames:(NSArray *)imageNames
+                           pageBottomSapcing:(CGFloat)bottomSapcing
+                      launchIntroductionType:(LHYLaunchIntroductionType)launchIntroductionType
+                         buttonConfiguration:(LHYLaunchIntroductionConfigurationBlock)configuration {
+    
+    LHYLaunchIntroductionView *launch = [[LHYLaunchIntroductionView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight) images:imageNames launchIntroductionType:launchIntroductionType pageBottomSapcing:bottomSapcing];
+    launch.backgroundColor = [UIColor whiteColor];
+    if (configuration) {
+        configuration(launch.enterButton);
+    }
+    
+    [LHYLaunchIntroductionView addToWindowWithLaunch:launch];
+}
 
 #pragma mark - 判断是不是首次登录或者版本更新
 + (BOOL)isFirstLaunch {
@@ -148,7 +163,7 @@ static NSString *const kAppVersion = @"appVersion";
         }
     }
     
-    _pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, kScreenHeight - 50, kScreenWidth, 30)];
+    _pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, kScreenHeight - 30 - self.bottomSapcing, kScreenWidth, 30)];
     _pageControl.numberOfPages = _images.count;
     _pageControl.backgroundColor = [UIColor clearColor];
     _pageControl.currentPage = 0;

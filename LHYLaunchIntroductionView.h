@@ -18,7 +18,7 @@ typedef void(^LHYLaunchIntroductionConfigurationBlock)(UIButton *enterButton);
  *  @param imageNames 背景图片数组
  *
  */
-+ (void)launchIntroductionViewWithImageNames:(NSArray *)imageNames;
++ (void)launchIntroductionViewWithImageNames:(NSArray *)imageNames pageBottomSapcing:(CGFloat)bottomSapcing;
 
 /**
  *  带按钮的引导页
@@ -26,6 +26,7 @@ typedef void(^LHYLaunchIntroductionConfigurationBlock)(UIButton *enterButton);
  *  @param images        背景图片数组
  *  @param configuration 按钮配置(样式，frame, title)
  */
-+ (void)launchIntroductionViewWithImageNames:(NSArray *)imageNames buttonConfiguration:(LHYLaunchIntroductionConfigurationBlock)configuration;
++ (void)launchIntroductionViewWithImageNames:(NSArray *)imageNames pageBottomSapcing:(CGFloat)bottomSapcing buttonConfiguration:(LHYLaunchIntroductionConfigurationBlock)configuration;
+
 
 @end
