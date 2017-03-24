@@ -143,6 +143,7 @@ static NSString *const kAppVersion = @"appVersion";
             if (self.launchIntroductionType == LHYLaunchIntroductionTypeButton) {
                 [_enterButton addTarget:self action:@selector(enterBtnClicked) forControlEvents:UIControlEventTouchUpInside];
                 [guideImageView addSubview:_enterButton];
+                guideImageView.userInteractionEnabled = YES;
             }
         }
     }
